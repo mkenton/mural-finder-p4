@@ -1,15 +1,10 @@
+import Contribution from "./Contribution"
 export default function ContributionsContainer({ markers }) {
 
 
     return (
-        <div>
-            <p>Contributions!!</p>
-            <ul>
-                {markers.map((marker) => (
-             <li>{marker.muralName} | Time Contributed: {marker.time.toISOString()}</li>
-           )
-           )}
-           </ul>
+        <div className = "flex-container">
+             {markers.map( marker =>  <Contribution marker={marker}/>)}
         </div>
     )
 }

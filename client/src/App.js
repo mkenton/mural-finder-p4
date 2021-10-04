@@ -9,6 +9,7 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
+import { formatRelative } from "date-fns";
 // // TODO: import if want to use autocomplete for search
 //  import usePlacesAutocomplete, {
 //    getGeocode,
@@ -24,7 +25,6 @@ import {
 //   ComboboxOption,
 // } from "@reach/combobox";
 
-import { formatRelative } from "date-fns";
 
 // import "@reach/combobox/styles.css";
 
@@ -60,6 +60,16 @@ function App() {
   // }, []);
 
   // if (!user) return <Login onLogin={setUser} />;
+  const [user, setUser] = useState(null);
+
+  // useEffect(() => {
+  //   // auto-login
+  //   fetch("/me").then((r) => {
+  //     if (r.ok) {
+  //       r.json().then((user) => setUser(user));
+  //     }
+  //   });
+  // }, []);
 
 
   let count = 0
@@ -67,7 +77,7 @@ function App() {
   const [selected, setSelected] = useState(null)
 
   const onMapClick = useCallback((e) => {
-    count = count + 1
+    count = count + 1 // setting mural name via counter for testing. TODO: allow input to set name, add picture, etc.
     setMarkers((current) => [
       ...current,
       {
@@ -92,6 +102,14 @@ function App() {
   if (loadError) return "Error loading maps"
   if (!isLoaded) return "Loading Page"
 
+ const handleNameSubmit = (event) => {
+   event.preventDefault();
+   console.log(event)
+   //map over markers and set description for marker where marker.id = selected.id
+  setMarkers(markers.map( (marker) => 
+  selected.key === marker.key ? {...marker, description: event.target.value} : marker))
+  console.log(markers)
+ }
 
   // ROUTER METHOD
   return (
@@ -99,10 +117,10 @@ function App() {
       <div className="App">
 
         <nav className="navbar">
+          <NavLink activeClassName="active-nav" className="login-link" to="/login">Login</NavLink>
           <NavLink exact activeClassName="active-nav" className="navbar-links" to="/">MAP</NavLink>
           <NavLink activeClassName="active-nav" className="navbar-links" to="/contributions">CONTRIBUTIONS</NavLink>
           <NavLink activeClassName="active-nav" className="navbar-links" to="/bucketlist">BUCKET LIST</NavLink>
-          <NavLink activeClassName="active-nav" className="navbar-links" to="/login">Login</NavLink>
         </nav>
 
         <Switch>
@@ -114,8 +132,8 @@ function App() {
             <p>Bucket List</p>
           </Route>
           <Route path="/login">
-            {/* <Login/> */}
-            <p>Login</p>
+            <Login/>
+            {/* <p>Login</p> */}
           </Route>
           <Route exact path="/">
             <GoogleMap
@@ -145,6 +163,10 @@ function App() {
                   <div>
                     <h2>{selected.muralName}</h2> 
                     <p>Contributed: {formatRelative(selected.time, new Date())}</p>
+                    <form onSubmit={handleNameSubmit}>
+                      <label for="mural-description">Description:</label>
+                      <input type="text" id="mural-description" name="mural-description"></input>
+                    </form>
                   </div>
 
                 </InfoWindow>) : null}
