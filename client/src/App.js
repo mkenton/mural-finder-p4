@@ -75,6 +75,7 @@ function App() {
   let count = 0
   const [markers, setMarkers] = useState([])
   const [selected, setSelected] = useState(null)
+  const [description, setDescription] = useState("")
 
   const onMapClick = useCallback((e) => {
     count = count + 1 // setting mural name via counter for testing. TODO: allow input to set name, add picture, etc.
@@ -94,6 +95,7 @@ function App() {
     libraries
   })
 
+  //TODO: consult documentation, useRef may be deprecated
   const mapRef = useRef();
   const onMapLoad = useCallback((map) => {
     mapRef.current = map;
@@ -102,14 +104,23 @@ function App() {
   if (loadError) return "Error loading maps"
   if (!isLoaded) return "Loading Page"
 
- const handleNameSubmit = (event) => {
+ const handleNameEntry = (event) => {
    event.preventDefault();
-   console.log(event)
+  //  console.log("Event", event)
+  //  console.log("currentevent.target: ", event.currentTarget.value)
+  //  console.log('target.value: ', event.target.value)
+  //  console.log("selected.key:", selected.time)
+  //  console.log("filter for correct marker:", markers.filter(marker => marker.time === selected.time))
    //map over markers and set description for marker where marker.id = selected.id
-  setMarkers(markers.map( (marker) => 
-  selected.key === marker.key ? {...marker, description: event.target.value} : marker))
-  console.log(markers)
+  setDescription( event.target.value)
+  console.log(event.target.value)
  }
+
+ const handleSubmit = (e) => {
+   e.preventDefault()
+   setMarkers(markers.map( (marker) => 
+   selected.time === marker.time ? {...marker, description: description} : marker))
+  }
 
   // ROUTER METHOD
   return (
@@ -163,10 +174,10 @@ function App() {
                   <div>
                     <h2>{selected.muralName}</h2> 
                     <p>Contributed: {formatRelative(selected.time, new Date())}</p>
-                    <form onSubmit={handleNameSubmit}>
+                    {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
                       <label for="mural-description">Description:</label>
-                      <input type="text" id="mural-description" name="mural-description"></input>
-                    </form>
+                      <input onChange={handleNameEntry} type="text" id="mural-description" name="mural-description"></input>
+                    </form>}
                   </div>
 
                 </InfoWindow>) : null}
