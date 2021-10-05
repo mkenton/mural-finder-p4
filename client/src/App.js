@@ -67,6 +67,7 @@ function App() {
   const [markers, setMarkers] = useState([])
   const [selected, setSelected] = useState(null)
   const [description, setDescription] = useState("")
+  const [onLogin, setOnLogin] = useState(null)
 
   const onMapClick = useCallback((e) => {
     count = count + 1 // setting mural name via counter for testing. TODO: allow input to set name, add picture, etc.
@@ -134,7 +135,7 @@ function App() {
             <p>Bucket List</p>
           </Route>
           <Route path="/login">
-            <Login/>
+            <Login onLogin={setOnLogin}/>
             {/* <p>Login</p> */}
           </Route>
           <Route exact path="/">
