@@ -23,8 +23,6 @@ function SignUpForm({ onLogin }) {
         username,
         password,
         password_confirmation: passwordConfirmation,
-        image_url: imageUrl,
-        bio,
       }),
     }).then((r) => {
       setIsLoading(false);
@@ -68,7 +66,7 @@ function SignUpForm({ onLogin }) {
           autoComplete="current-password"
         />
       </FormField>
-      <FormField>
+      {/* <FormField>
         <Label htmlFor="imageUrl">Profile Image</Label>
         <Input
           type="text"
@@ -85,7 +83,7 @@ function SignUpForm({ onLogin }) {
           value={bio}
           onChange={(e) => setBio(e.target.value)}
         />
-      </FormField>
+      </FormField> */}
       <FormField>
         <Button type="submit">{isLoading ? "Loading..." : "Sign Up"}</Button>
       </FormField>
