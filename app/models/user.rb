@@ -1,11 +1,8 @@
 class User < ApplicationRecord
     has_secure_password
 
-    # # VALIDATE USERNAME FOR UNIQUENESS 
-    # validates :username, uniqueness: {case_sensitive: false}
-    # # should include following on user controller if used:  
-    # # # rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity 
- 
+    # VALIDATE USERNAME FOR UNIQUENESS 
+    validates :username, uniqueness: {case_sensitive: false} , presence: true
 
     has_many :places
 end

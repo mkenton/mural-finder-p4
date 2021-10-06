@@ -99,10 +99,6 @@ function App() {
 
   const handleNameEntry = (event) => {
     event.preventDefault();
-    //  console.log("Event", event)
-    //  console.log("currentevent.target: ", event.currentTarget.value)
-    //  console.log('target.value: ', event.target.value)
-    //  console.log("selected.key:", selected.time)
     //  console.log("filter for correct marker:", markers.filter(marker => marker.time === selected.time))
     //map over markers and set description for marker where marker.id = selected.id
     setDescription(event.target.value)
@@ -122,7 +118,10 @@ function App() {
       selected.time === marker.time ? { ...marker, description: description } : marker))
   }
 
-  if (!user) return <Login
+  console.log("in app.js: user:", user)
+  
+  if (!user) 
+    return <Login
     onLogin={setUser}
     markers={markers}
     selected={selected}
@@ -131,103 +130,104 @@ function App() {
     options={options}
     onLoad={onMapLoad}
     handleSubmit={handleSubmit}
-    handleNameEntry={handleNameEntry}/>
+    handleNameEntry={handleNameEntry} />
 
-  return (
-    <Router>
-      <div className="App">
+    return (
+      <Router>
+        <div className="App">
 
-        <nav className="navbar">
-          {/* <NavLink activeClassName="active-nav" className="login-link" to="/loginpage">Login</NavLink> */}
-          <Button className="login-link" onClick={handleLogoutClick}>
-            Logout
-          </Button>
-          <NavLink exact activeClassName="active-nav" className="navbar-links" to="/">MAP</NavLink>
-          <NavLink activeClassName="active-nav" className="navbar-links" to="/contributions">CONTRIBUTIONS</NavLink>
-          <NavLink activeClassName="active-nav" className="navbar-links" to="/bucketlist">BUCKET LIST</NavLink>
-        </nav>
+          {/* TODO: Turn NavBar into Component */}
+          <nav className="navbar">
+            {/* <NavLink activeClassName="active-nav" className="login-link" to="/loginpage">Login</NavLink> */}
+            <Button className="login-link" onClick={handleLogoutClick}>
+              Logout
+            </Button>
+            <NavLink exact activeClassName="active-nav" className="navbar-links" to="/">MAP</NavLink>
+            <NavLink activeClassName="active-nav" className="navbar-links" to="/contributions">CONTRIBUTIONS</NavLink>
+            <NavLink activeClassName="active-nav" className="navbar-links" to="/bucketlist">BUCKET LIST</NavLink>
+          </nav>
 
-        <Switch>
-          <Route path="/contributions">
-            <ContributionsContainer markers={markers} />
-          </Route>
-          <Route path="/bucketlist">
-            {/* <BucketList/> */}
-            <p>Bucket List</p>
-          </Route>
-          {/* <Route path="/loginpage">
-            <Login onLogin={setOnLogin}/>
-          </Route> */}
-          <Route exact path="/">
-            <GoogleMap
-              mapContainerStyle={mapContainerStyle}
-              zoom={10}
-              center={center}
-              options={options}
-              onClick={onMapClick}
-              onLoad={onMapLoad}
-            >
-              {markers.map((marker) => (
-                <Marker
-                  key={marker.time.toISOString()}
-                  position={{ lat: marker.lat, lng: marker.lng }}
-                  animation={2}
-                  onClick={(e) => {
-                    // console.log(e)
-                    setSelected(marker)
-                  }}
-                />
-              ))}
+          <Switch>
+            <Route path="/contributions">
+              <ContributionsContainer markers={markers} user={user}/>
+            </Route>
+            <Route path="/bucketlist">
+              {/* <BucketList/> */}
+              <p>Bucket List</p>
+            </Route>
+            {/* <Route path="/loginpage">
+              <Login onLogin={setOnLogin}/>
+            </Route> */}
+            <Route exact path="/">
+              {/* TODO: Refactor map into Home w/ map and Contributions w/ map, add header w/ username */}
+              <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                zoom={10}
+                center={center}
+                options={options}
+                onClick={onMapClick}
+                onLoad={onMapLoad}
+              >
+                {markers.map((marker) => (
+                  <Marker
+                    key={marker.time.toISOString()}
+                    position={{ lat: marker.lat, lng: marker.lng }}
+                    animation={2}
+                    onClick={(e) => {
+                      // console.log(e)
+                      setSelected(marker)
+                    }}
+                  />
+                ))}
 
-              {selected ? (
-                <InfoWindow
-                  position={{ lat: selected.lat, lng: selected.lng }}
-                  onCloseClick={() => setSelected(null)}>
-                  <div>
-                    <h2>{selected.muralName}</h2>
-                    <p>Contributed: {formatRelative(selected.time, new Date())}</p>
-                    {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
-                      <label for="mural-description">Description:</label>
-                      <input onChange={handleNameEntry} type="text" id="mural-description" name="mural-description"></input>
-                    </form>}
-                  </div>
+                {selected ? (
+                  <InfoWindow
+                    position={{ lat: selected.lat, lng: selected.lng }}
+                    onCloseClick={() => setSelected(null)}>
+                    <div>
+                      <h2>{selected.muralName}</h2>
+                      <p>Contributed: {formatRelative(selected.time, new Date())}</p>
+                      {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
+                        <label for="mural-description">Description:</label>
+                        <input onChange={handleNameEntry} type="text" id="mural-description" name="mural-description"></input>
+                      </form>}
+                    </div>
+                  </InfoWindow>) : null}
+              </GoogleMap>
+            </Route>
+            <Route path="*"><h1 className="page-not-found">404 Page Not Found :(</h1></Route>
+          </Switch>
+        </div>
+      </Router>
 
-                </InfoWindow>) : null}
-            </GoogleMap>
-          </Route>
-          <Route path="*"><h1 className="page-not-found">404 Page Not Found :(</h1></Route>
-        </Switch>
-      </div>
-    </Router>
-
-  );
-}
-
-
-
+    );
+  }
 
 
 
-//   // RENDER MAP ONLY
-//   return (
-//     <div className="App">
-//       <GoogleMap
-//         mapContainerStyle={mapContainerStyle}
-//         zoom={10}
-//         center={center}
-//         options={options}
-//         onClick={onMapClick}
-//        >
-//            {markers.map((marker) => (
-//              <Marker
-//                key={marker.time.toISOString()}
-//                position={ {lat: marker.lat, lng: marker.lng}}
-//              />
-//            ))}
-//            </GoogleMap>
-//     </div>
-//   );
-// }
+
+
+
+  //   // RENDER MAP ONLY
+  //   return (
+  //     <div className="App">
+  //       <GoogleMap
+  //         mapContainerStyle={mapContainerStyle}
+  //         zoom={10}
+  //         center={center}
+  //         options={options}
+  //         onClick={onMapClick}
+  //        >
+  //            {markers.map((marker) => (
+  //              <Marker
+  //                key={marker.time.toISOString()}
+  //                position={ {lat: marker.lat, lng: marker.lng}}
+  //              />
+  //            ))}
+  //            </GoogleMap>
+  //     </div>
+  //   );
+  // }
 
 
 export default App;

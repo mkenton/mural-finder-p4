@@ -5,5 +5,12 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+User.all.destroy
+Place.all.destroy
 
-marc = User.create(username: "Marc", password: "password")
+alec = User.create(username: "Alec", password: "password")
+mike = User.create(username: "Mike", password: "password")
+
+
+mural1 = Place.create(user_id: 3, title: "Cool Mural", image_url: "https://cdn.booooooom.com/wp-content/uploads/2020/02/alexpardee-PowWowMuralPhoto1.jpg")
+mural2 = Place.create(user_id: 4, title: "Fireman", image_url: "https://theholmesteadhome.files.wordpress.com/2019/06/p5291604.jpg")
