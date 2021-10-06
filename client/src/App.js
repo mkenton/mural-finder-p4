@@ -67,6 +67,7 @@ function App() {
   const [markers, setMarkers] = useState([])
   const [selected, setSelected] = useState(null)
   const [description, setDescription] = useState("")
+  const [onLogin, setOnLogin] = useState(null)
 
   const onMapClick = useCallback((e) => {
     count = count + 1 // setting mural name via counter for testing. TODO: allow input to set name, add picture, etc.
@@ -135,11 +136,15 @@ function App() {
           </Route>
 <<<<<<< Updated upstream
           <Route path="/login">
+<<<<<<< HEAD
             <Login/>
 =======
           <Route path="/loginpage">
             <Login onLogin={setOnLogin}/>
 >>>>>>> Stashed changes
+=======
+            <Login onLogin={setOnLogin}/>
+>>>>>>> 4433bfb0eaa189cdda93d2cdee5def55e8a7c4a2
             {/* <p>Login</p> */}
           </Route>
           <Route exact path="/">
