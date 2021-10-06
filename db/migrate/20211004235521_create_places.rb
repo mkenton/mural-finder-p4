@@ -12,6 +12,10 @@ class CreatePlaces < ActiveRecord::Migration[6.1]
       t.string :artist_name
       t.boolean :verified
       t.string :date_uploaded 
+      t.integer :longitude 
+      t.integer :latitude
+      t.string :type 
+      
 
 
       t.timestamps

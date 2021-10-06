@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   
-  resources :locations
   resources :places, only: [:index, :create]
   
   post "/signup", to: "users#create"
