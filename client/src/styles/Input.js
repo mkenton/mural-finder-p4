@@ -6,7 +6,7 @@ const Input = styled.input`
   border-color: #dbdbdb;
   -webkit-appearance: none;
   max-width: 100%;
-  width: 100%;
+  width: 80%;
   font-size: 1rem;
   line-height: 1.5;
   padding: 4px;

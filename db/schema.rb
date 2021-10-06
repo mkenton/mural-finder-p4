@@ -26,6 +26,9 @@ ActiveRecord::Schema.define(version: 2021_10_04_235521) do
     t.string "artist_name"
     t.boolean "verified"
     t.string "date_uploaded"
+    t.integer "longitude"
+    t.integer "latitude"
+    t.string "type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

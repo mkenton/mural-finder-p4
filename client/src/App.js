@@ -10,6 +10,7 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import { formatRelative } from "date-fns";
+import { Button } from "./styles";
 // // TODO: import if want to use autocomplete for search
 //  import usePlacesAutocomplete, {
 //    getGeocode,
@@ -59,8 +60,8 @@ function App() {
     });
   }, []);
 
-  //
-  // if (!user) return <Login onLogin={setUser} />;
+
+
 
 
   let count = 0
@@ -96,31 +97,51 @@ function App() {
   if (loadError) return "Error loading maps"
   if (!isLoaded) return "Loading Page"
 
- const handleNameEntry = (event) => {
-   event.preventDefault();
-  //  console.log("Event", event)
-  //  console.log("currentevent.target: ", event.currentTarget.value)
-  //  console.log('target.value: ', event.target.value)
-  //  console.log("selected.key:", selected.time)
-  //  console.log("filter for correct marker:", markers.filter(marker => marker.time === selected.time))
-   //map over markers and set description for marker where marker.id = selected.id
-  setDescription( event.target.value)
-  console.log(event.target.value)
- }
-
- const handleSubmit = (e) => {
-   e.preventDefault()
-   setMarkers(markers.map( (marker) => 
-   selected.time === marker.time ? {...marker, description: description} : marker))
+  const handleNameEntry = (event) => {
+    event.preventDefault();
+    //  console.log("Event", event)
+    //  console.log("currentevent.target: ", event.currentTarget.value)
+    //  console.log('target.value: ', event.target.value)
+    //  console.log("selected.key:", selected.time)
+    //  console.log("filter for correct marker:", markers.filter(marker => marker.time === selected.time))
+    //map over markers and set description for marker where marker.id = selected.id
+    setDescription(event.target.value)
+    console.log(event.target.value)
   }
 
-  // ROUTER METHOD
+  function handleLogoutClick() {
+    fetch("/logout", { method: "DELETE" }).then((r) => {
+      if (r.ok) {
+        setUser(null);
+      }
+    });
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setMarkers(markers.map((marker) =>
+      selected.time === marker.time ? { ...marker, description: description } : marker))
+  }
+
+  if (!user) return <Login
+    onLogin={setUser}
+    markers={markers}
+    selected={selected}
+    setSelected={setSelected}
+    center={center}
+    options={options}
+    onLoad={onMapLoad}
+    handleSubmit={handleSubmit}
+    handleNameEntry={handleNameEntry}/>
+
   return (
     <Router>
       <div className="App">
 
         <nav className="navbar">
-          <NavLink activeClassName="active-nav" className="login-link" to="/loginpage">Login</NavLink>
+          {/* <NavLink activeClassName="active-nav" className="login-link" to="/loginpage">Login</NavLink> */}
+          <Button className="login-link" onClick={handleLogoutClick}>
+            Logout
+          </Button>
           <NavLink exact activeClassName="active-nav" className="navbar-links" to="/">MAP</NavLink>
           <NavLink activeClassName="active-nav" className="navbar-links" to="/contributions">CONTRIBUTIONS</NavLink>
           <NavLink activeClassName="active-nav" className="navbar-links" to="/bucketlist">BUCKET LIST</NavLink>
@@ -134,19 +155,9 @@ function App() {
             {/* <BucketList/> */}
             <p>Bucket List</p>
           </Route>
-<<<<<<< Updated upstream
-          <Route path="/login">
-<<<<<<< HEAD
-            <Login/>
-=======
-          <Route path="/loginpage">
+          {/* <Route path="/loginpage">
             <Login onLogin={setOnLogin}/>
->>>>>>> Stashed changes
-=======
-            <Login onLogin={setOnLogin}/>
->>>>>>> 4433bfb0eaa189cdda93d2cdee5def55e8a7c4a2
-            {/* <p>Login</p> */}
-          </Route>
+          </Route> */}
           <Route exact path="/">
             <GoogleMap
               mapContainerStyle={mapContainerStyle}
@@ -173,7 +184,7 @@ function App() {
                   position={{ lat: selected.lat, lng: selected.lng }}
                   onCloseClick={() => setSelected(null)}>
                   <div>
-                    <h2>{selected.muralName}</h2> 
+                    <h2>{selected.muralName}</h2>
                     <p>Contributed: {formatRelative(selected.time, new Date())}</p>
                     {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
                       <label for="mural-description">Description:</label>

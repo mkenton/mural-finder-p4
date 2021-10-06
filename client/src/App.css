@@ -53,5 +53,20 @@
     display: grid;
     width: 150px;
     margin: 10px;
-    align-content: center;
+    /* align-content: center; */
+}
+
+.grid-container{
+    display: inline-grid;
+    grid-template-columns: 3fr 1fr;
+    grid-column-gap: 15px;
+    padding-left: 10px;
+}
+
+.login-form {
+border: black solid 5px;
+}
+
+.login-form > *{
+margin-left: 5%;
 }
