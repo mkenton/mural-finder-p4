@@ -26,7 +26,7 @@ export default function ContributionsContainer({ markers, user }) {
     // console.log("Under useEffect", places)
     return (
         <div className="flex-container">
-            {places.map(place => <Contribution place={place}/>)}
+            {places.filter(place => place.user_id === user.id).map(place => <Contribution place={place}/>)}
             {/* {places.filter(place => place.user_id === user.id).map(place => <Contribution place={place}/>)} */}
             {/* {markers.map(marker => <Contribution marker={marker} />)} */}
         </div>
