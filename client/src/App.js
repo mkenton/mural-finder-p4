@@ -120,7 +120,7 @@ function App() {
       <div className="App">
 
         <nav className="navbar">
-          <NavLink activeClassName="active-nav" className="login-link" to="/login">Login</NavLink>
+          <NavLink activeClassName="active-nav" className="login-link" to="/loginpage">Login</NavLink>
           <NavLink exact activeClassName="active-nav" className="navbar-links" to="/">MAP</NavLink>
           <NavLink activeClassName="active-nav" className="navbar-links" to="/contributions">CONTRIBUTIONS</NavLink>
           <NavLink activeClassName="active-nav" className="navbar-links" to="/bucketlist">BUCKET LIST</NavLink>
@@ -134,8 +134,17 @@ function App() {
             {/* <BucketList/> */}
             <p>Bucket List</p>
           </Route>
+<<<<<<< Updated upstream
           <Route path="/login">
+<<<<<<< HEAD
+            <Login/>
+=======
+          <Route path="/loginpage">
             <Login onLogin={setOnLogin}/>
+>>>>>>> Stashed changes
+=======
+            <Login onLogin={setOnLogin}/>
+>>>>>>> 4433bfb0eaa189cdda93d2cdee5def55e8a7c4a2
             {/* <p>Login</p> */}
           </Route>
           <Route exact path="/">
