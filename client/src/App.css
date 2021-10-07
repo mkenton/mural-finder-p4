@@ -63,10 +63,10 @@
     padding-left: 10px;
 }
 
-.login-form {
+.sidebar{
 border: black solid 5px;
 }
 
-.login-form > *{
+.sidebar > *{
 margin-left: 5%;
 }

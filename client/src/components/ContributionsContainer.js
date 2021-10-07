@@ -2,16 +2,9 @@ import Contribution from "./Contribution"
 import { useEffect, useState } from "react"
 export default function ContributionsContainer({ markers, user }) {
 
-    //     useEffect(() => {
-    //     fetch("/me").then((r) => {
-    //       if (r.ok) {
-    //         r.json().then((user) => setUser(user));
-    //       }
-    //     });
-    //   }
+
     const [places, setPlaces] = useState([])
     console.log("in contributionsContainer: user: ", user)
-    // console.log("Above useEffect", places)
 
     useEffect(() => {
         fetch("/places")

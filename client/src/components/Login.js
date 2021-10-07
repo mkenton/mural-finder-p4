@@ -3,7 +3,7 @@ import '../App.css';
 import styled from "styled-components";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
-import { Button } from "../styles";
+import { Button, Logo } from "../styles";
 import {
   GoogleMap,
   // useLoadScript,
@@ -56,7 +56,7 @@ function Login({ onLogin, markers, selected, setSelected, center, options, onMap
             </InfoWindow>) : null}
         </GoogleMap>
       </div>
-      <div className="login-form">
+      <div className="sidebar">
         <Logo>Mural Finder</Logo>
         {showLogin ? (
           <>
@@ -86,12 +86,6 @@ function Login({ onLogin, markers, selected, setSelected, center, options, onMap
   );
 }
 
-const Logo = styled.h1`
-      font-family: "Verdana"
-      font-size: 3rem;
-      color: black;
-      margin: 8px 0 16px;
-      `;
 
 const Wrapper = styled.section`
       max-width: 500px;
