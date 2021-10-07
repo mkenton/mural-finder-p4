@@ -1,4 +1,5 @@
 class PlacesController < ApplicationController
+    skip_before_action :authorize, only: :index
 
     def index
         render json: Place.all
@@ -12,6 +13,6 @@ class PlacesController < ApplicationController
     private
 
     def place_params
-        params.permit(:title, :description, :image_url, :artist_name)
+        params.permit(:title, :description, :image_url, :artist_name, :lng, :lat)
     end
 end
