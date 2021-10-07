@@ -174,6 +174,7 @@ function App() {
                 center={center}
                 options={options}
                 onClick={onMapClick}
+                places={places}
                 onLoad={onMapLoad}
               >
                 {/* {markers.map((marker) => (
@@ -191,8 +192,8 @@ function App() {
 
                 {places.map((place) => (
                   <Marker
-                    key={place.created_at}
-                    position={{ lat: place.lat, lng: place.lng }}
+                    key={place.id}
+                    position={{ lat: parseInt(place.lat), lng: parseInt(place.lng) }}
                     draggable={true}
                     animation={2}
                     onClick={(e) => {
