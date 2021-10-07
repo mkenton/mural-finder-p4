@@ -20,13 +20,13 @@ export default function NewPlaceForm(setPlaces, places, user) {
       body: JSON.stringify({
         title,
         image_url: imageUrl,
-        user_id: user.id
+        // user_id: user.id
       }),
     }).then((r) => {
       setIsLoading(false);
       if (r.ok) {
           console.log(r)
-          history.push("/");
+          history.push("/contributions");
       } else {
         r.json().then((err) => setErrors(err.errors));
       }

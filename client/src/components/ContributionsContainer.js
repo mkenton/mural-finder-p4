@@ -4,11 +4,12 @@ export default function ContributionsContainer({ markers, user, places, setPlace
 
 
     console.log("in contributionsContainer: user: ", user)
+    console.log({places})
 
     useEffect(() => {
         fetch("/places")
             .then(r => r.json()
-                .then(data => console.log(data))
+                .then(data => setPlaces(data))
             )
     }, [])
 

@@ -120,7 +120,7 @@ function App() {
       selected.time === marker.time ? { ...marker, description: description } : marker))
   }
 
-  console.log("in app.js: user:", user)
+  // console.log("in app.js: user:", user)
   
   if (!user) 
     return <Login
