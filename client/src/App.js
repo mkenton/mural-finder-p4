@@ -78,9 +78,9 @@ function App() {
 
 
   // places.map(place => console.log(place.lat))
-  // const first = places
+  const first = places[0]
   // console.log("places", places)
-  // console.log("first lat", first.lat)
+  console.log("first lat", first)
 
   let count = 0
 
@@ -176,7 +176,7 @@ function App() {
                 onClick={onMapClick}
                 onLoad={onMapLoad}
               >
-                {markers.map((marker) => (
+                {/* {markers.map((marker) => (
                   <Marker
                     key={marker.time.toISOString()}
                     position={{ lat: marker.lat, lng: marker.lng }}
@@ -187,20 +187,20 @@ function App() {
                       setSelected(marker)
                     }}
                   />
-                ))}
+                ))} */}
 
-                {/* {places.map((place) => (
+                {places.map((place) => (
                   <Marker
                     key={place.created_at}
-                    position={{ lat: place.lat.to_f, lng: place.lng.to_f }}
+                    position={{ lat: place.lat, lng: place.lng }}
                     draggable={true}
                     animation={2}
-                    // onClick={(e) => {
-                    //   // console.log(e)
-                    //   setSelected(place)
-                    // }}
+                    onClick={(e) => {
+                      // console.log(e)
+                      setSelected(place)
+                    }}
                   />
-                ))} */}
+                ))}
 
                 {selected ? (
                   <InfoWindow
@@ -216,6 +216,7 @@ function App() {
                     </div>
                   </InfoWindow>)
                   : null}
+                  
               </GoogleMap>
               <NewPlaceForm setPlaces={setPlaces} places={places} user={user} />
             </div>
