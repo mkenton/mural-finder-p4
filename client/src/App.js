@@ -175,6 +175,7 @@ function App() {
                   <Marker
                     key={marker.time.toISOString()}
                     position={{ lat: marker.lat, lng: marker.lng }}
+                    draggable={true}
                     animation={2}
                     onClick={(e) => {
                       // console.log(e)
@@ -190,12 +191,13 @@ function App() {
                     <div>
                       <h2>{selected.muralName}</h2>
                       <p>Contributed: {formatRelative(selected.time, new Date())}</p>
-                      {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
+                      {/* {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
                         <label for="mural-description">Description:</label>
                         <input onChange={handleNameEntry} type="text" id="mural-description" name="mural-description"></input>
-                      </form>}
+                      </form>} */}
                     </div>
-                  </InfoWindow>) : null}
+                  </InfoWindow>) 
+                  : null}
               </GoogleMap>
               <NewPlaceForm setPlaces={setPlaces} places={places} user={user}/>
               </div>

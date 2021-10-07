@@ -20,14 +20,13 @@ ActiveRecord::Schema.define(version: 2021_10_04_235521) do
     t.integer "user_id"
     t.text "description"
     t.string "image_url"
-    t.integer "location_id"
     t.integer "check_ins"
     t.boolean "bucket_list"
     t.string "artist_name"
     t.boolean "verified"
     t.string "date_uploaded"
-    t.integer "longitude"
-    t.integer "latitude"
+    t.string "longitude"
+    t.string "latitude"
     t.string "type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -36,6 +35,7 @@ ActiveRecord::Schema.define(version: 2021_10_04_235521) do
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "password_digest"
+    t.string "bucket_list"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
