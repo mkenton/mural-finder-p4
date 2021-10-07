@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router, Switch, NavLink } from "react-router-do
 import './App.css';
 import ContributionsContainer from "./components/ContributionsContainer"
 import Login from "./components/Login"
+import NewPlaceForm from "./components/NewPlaceForm"
 import {
   GoogleMap,
   useLoadScript,
@@ -34,7 +35,7 @@ import mapStyles from "./mapStyles";
 
 const libraries = ["places"]
 const mapContainerStyle = {
-  width: "80vw",
+  width: "70vw",
   height: "90vh",
 };
 const center = {
@@ -160,6 +161,7 @@ function App() {
             </Route> */}
             <Route exact path="/">
               {/* TODO: Refactor map into Home w/ map and Contributions w/ map, add header w/ username */}
+              <div className="grid-container">
               <GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 zoom={10}
@@ -194,6 +196,8 @@ function App() {
                     </div>
                   </InfoWindow>) : null}
               </GoogleMap>
+              <NewPlaceForm/>
+              </div>
             </Route>
             <Route path="*"><h1 className="page-not-found">404 Page Not Found :(</h1></Route>
           </Switch>
@@ -202,32 +206,6 @@ function App() {
 
     );
   }
-
-
-
-
-
-
-  //   // RENDER MAP ONLY
-  //   return (
-  //     <div className="App">
-  //       <GoogleMap
-  //         mapContainerStyle={mapContainerStyle}
-  //         zoom={10}
-  //         center={center}
-  //         options={options}
-  //         onClick={onMapClick}
-  //        >
-  //            {markers.map((marker) => (
-  //              <Marker
-  //                key={marker.time.toISOString()}
-  //                position={ {lat: marker.lat, lng: marker.lng}}
-  //              />
-  //            ))}
-  //            </GoogleMap>
-  //     </div>
-  //   );
-  // }
 
 
 export default App;
