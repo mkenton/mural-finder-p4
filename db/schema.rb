@@ -21,12 +21,11 @@ ActiveRecord::Schema.define(version: 2021_10_04_235521) do
     t.text "description"
     t.string "image_url"
     t.integer "check_ins"
-    t.boolean "bucket_list"
     t.string "artist_name"
     t.boolean "verified"
     t.string "date_uploaded"
-    t.string "longitude"
-    t.string "latitude"
+    t.decimal "lng"
+    t.decimal "lat"
     t.string "type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
