@@ -1,15 +1,14 @@
 import Contribution from "./Contribution"
 import { useEffect, useState } from "react"
-export default function ContributionsContainer({ markers, user }) {
+export default function ContributionsContainer({ markers, user, places, setPlaces }) {
 
 
-    const [places, setPlaces] = useState([])
     console.log("in contributionsContainer: user: ", user)
 
     useEffect(() => {
         fetch("/places")
             .then(r => r.json()
-                .then(data => setPlaces(data))
+                .then(data => console.log(data))
             )
     }, [])
 

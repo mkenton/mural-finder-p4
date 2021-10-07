@@ -70,6 +70,7 @@ function App() {
   const [selected, setSelected] = useState(null)
   const [description, setDescription] = useState("")
   const [onLogin, setOnLogin] = useState(null)
+  const [places, setPlaces] = useState([])
 
   const onMapClick = useCallback((e) => {
     count = count + 1 // setting mural name via counter for testing. TODO: allow input to set name, add picture, etc.
@@ -150,7 +151,7 @@ function App() {
 
           <Switch>
             <Route path="/contributions">
-              <ContributionsContainer markers={markers} user={user}/>
+              <ContributionsContainer markers={markers} user={user} places={places} setPlaces={setPlaces}/>
             </Route>
             <Route path="/bucketlist">
               {/* <BucketList/> */}
@@ -196,7 +197,7 @@ function App() {
                     </div>
                   </InfoWindow>) : null}
               </GoogleMap>
-              <NewPlaceForm/>
+              <NewPlaceForm setPlaces={setPlaces} places={places} user={user}/>
               </div>
             </Route>
             <Route path="*"><h1 className="page-not-found">404 Page Not Found :(</h1></Route>
