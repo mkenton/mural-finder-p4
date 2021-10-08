@@ -1,4 +1,4 @@
-import { useState} from 'react'
+import { useState } from 'react'
 import {
     GoogleMap,
     // useLoadScript,
@@ -7,12 +7,15 @@ import {
 } from "@react-google-maps/api";
 import mapStyles from "../mapStyles";
 import NewPlaceForm from "./NewPlaceForm"
+import { Button } from "../styles";
 
 export default function LoggedInMapPage({ setSelected,
     selected,
     setPlaces,
     places,
-    user }) {
+    user, onMapLoad }) {
+
+    const [marker, setMarker] = useState([])
 
     const mapContainerStyle = {
         width: "70vw",
@@ -41,27 +44,37 @@ export default function LoggedInMapPage({ setSelected,
                 setPlaces(places.map(place => data.id === place.id ? place.checkins = place.checkins + 1 : place))
             })
     }
-    function handleButton(e) {
-        console.log(e)
+    function handleBucketList(user_id, place_id) {
+      console.log(`Adding ${place_id} to bucket list of user ${user_id}`)
+      // add place.id to bucket list array
+      fetch(`/users/${user_id}`, {
+        method: "PATCH",
+        headers: {
+  // update bucket list array with new place.id
+          'Content-Type': 'application/json',
+        },
+        // body: JSON.stringify(updatedObj)
+      }).then((r) => r.json())
+        .then((data) => {
+          console.log(data.id)
+          // setUser with user.id === data.id to have bucket_list udpated with new array
+        })
     }
-    
-    const [marker, setMarker] = useState([])  
+
     function handleSetMarker(e) {
         setMarker(
             {
                 lat: e.latLng.lat(),
                 lng: e.latLng.lng(),
-                date_uploaded: new Date().toLocaleDateString()
+                date_uploaded: new Date().toLocaleDateString(),
             })
-        }
-        console.log("Marker Lat-Lng", marker.lat, marker.lng)
-        /*THIS WORKS and I CAN Consoles out the lat and long of the marker. 
-        As I click or drag it, it updates STATE*/
+    }
+    console.log("Marker Lat-Lng", marker.lat, marker.lng)
 
-        return (
-            
-            <div className="grid-container">
-            {/* In GoogleMap props, there's an onClick={(e) => handleSetMarker(e) } */}
+
+    return (
+
+        <div className="grid-container">
             <GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 zoom={10}
@@ -69,13 +82,14 @@ export default function LoggedInMapPage({ setSelected,
                 options={options}
                 onClick={(e) => handleSetMarker(e)}
                 places={places}
-                // onLoad={onMapLoad}
+                onLoad={onMapLoad}
                 selected={selected}
             >
                 {marker ? (
                     <Marker
                         // scale={1}
                         position={{ lat: parseFloat(marker.lat), lng: parseFloat(marker.lng) }}
+                        animation={1}
                         draggable={true}
                         onDragEnd={handleSetMarker} />
                 ) : ("")}
@@ -83,13 +97,13 @@ export default function LoggedInMapPage({ setSelected,
                 {places.map((place) => (
                     <Marker
                         // style={{fillColor: "#0073E6"}}
-                        options={{ scaledSize: 1.5 }}
+                        // options={{ scaledSize: 1.5 }}
                         icon={'http://maps.google.com/mapfiles/kml/paddle/blu-blank.png'}
                         selected={selected}
                         key={place.id}
                         position={{ lat: parseFloat(place.lat), lng: parseFloat(place.lng) }}
                         draggable={false}
-                        animation={2}
+                        // animation={2}
                         onClick={(e) => {
                             // console.log(e)
                             setSelected(place)
@@ -104,30 +118,26 @@ export default function LoggedInMapPage({ setSelected,
                         position={{ lat: parseFloat(selected.lat), lng: parseFloat(selected.lng) }}
                         onCloseClick={() => setSelected(null)}>
                         <div className="infoWindow">
-                            {selected.user ? (
-                                <>
-                                    <h2>{selected.title}</h2>
-                                    <img src={selected.image_url} alt="mural_thumbnail" width="200" height="200" />
-                                    <p> 📷 <strong>{selected.user.username}</strong></p>
-                                    <p> Submitted: <strong>{selected.date_uploaded}</strong></p>
-                                    <p> <strong> {selected.check_ins} total visits</strong> </p>
-                                    <button onClick={() => handleCheckIn(selected.id)}>Check In</button>
-                                    {/* <button onClick={() => handleBucketList(user.id, selected.id)}>Add to Bucket List</button> */}
-                                </>
-                            )
-                                : <button onClick={e => handleButton(e)}>Add Photo</button>}
+
+                            <h2>{selected.title}</h2>
+                            <img src={selected.image_url} alt="mural_thumbnail" width="270" height="auto" />
+                            <p> 📷 <strong>{selected.user.username}</strong></p>
+                            <p> Submitted: <strong>{selected.date_uploaded}</strong></p>
+                            <p>Total checkins: <strong>{selected.check_ins > 0 ? selected.check_ins : 0}</strong></p>
+                            <Button onClick={() => handleCheckIn(selected.id)}>Check In</Button>
+                            <Button onClick={() => handleBucketList(user.id, selected.id)}>Add to Bucket List</Button>
                         </div>
                     </InfoWindow>)
                     : null}
             </GoogleMap>
             {/* NewPlaceForm is passed marker state as sa prop, as seen below */}
-            <NewPlaceForm 
-            handleSetMarker={handleSetMarker} 
-            places={places} 
-            setPlaces={setPlaces} 
-            setMarker={setMarker} 
-            marker={marker} 
-            user={user} />
+            <NewPlaceForm
+                handleSetMarker={handleSetMarker}
+                places={places}
+                setPlaces={setPlaces}
+                setMarker={setMarker}
+                marker={marker}
+                user={user} />
         </div>
 
     )
