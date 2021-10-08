@@ -12,7 +12,7 @@ import {
 } from "@react-google-maps/api";
 import { formatRelative } from "date-fns";
 
-function Login({ onLogin, places, selected, setSelected, center, options, onMapLoad, handleSubmit, handleNameEntry }) {
+function Login({ onLogin, places, selected, setSelected, center, options, onMapLoad }) {
   const [showLogin, setShowLogin] = useState(true);
 
   return (
@@ -30,8 +30,9 @@ function Login({ onLogin, places, selected, setSelected, center, options, onMapL
         >
           {places.map((place) => (
             <Marker
+              // selected={selected}
               key={place.id}
-              position={{ lat: place.lat, lng: place.lng }}
+              position={{ lat: parseFloat(place.lat), lng: parseFloat(place.lng) }}
               animation={2}
               onClick={(e) => {
                 // console.log(e)
@@ -42,18 +43,21 @@ function Login({ onLogin, places, selected, setSelected, center, options, onMapL
 
           {selected ? (
             <InfoWindow
-            position={{ lat: selected.lat, lng: selected.lng }}
-            onCloseClick={() => setSelected(null)}>
-            <div>
-              <h2>{selected.title}</h2>
-              <p>Contributed: {selected.date_uploaded}</p>
-              {/* <p>Contributed: {formatRelative(selected.date_uploaded, new Date())}</p> */}
-              {/* {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
+              options={{ pixelOffset: new window.google.maps.Size(0, -30) }}
+              position={{ lat: parseFloat(selected.lat), lng: parseFloat(selected.lng) }}
+              onCloseClick={() => setSelected(null)}>
+              <div className="infoWindow">
+                <h2>{selected.title}</h2>
+                <img src={selected.image_url} alt="mural_thumbnail" width="140" height="140" />
+                <p>Contributed by: {selected.user_id}</p>
+                <p>on: {selected.date_uploaded}</p>
+                {/* <p>Contributed: {formatRelative(selected.date_uploaded, new Date())}</p> */}
+                {/* {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
                 <label for="mural-description">Description:</label>
                 <input onChange={handleNameEntry} type="text" id="mural-description" name="mural-description"></input>
               </form>} */}
-            </div>
-          </InfoWindow>) : null}
+              </div>
+            </InfoWindow>) : null}
         </GoogleMap>
       </div>
       <div className="sidebar">

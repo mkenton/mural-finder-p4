@@ -2,7 +2,8 @@ class PlacesController < ApplicationController
     skip_before_action :authorize, only: :index
 
     def index
-        render json: Place.all
+        places = Place.all
+        render json: places
     end
 
     def create

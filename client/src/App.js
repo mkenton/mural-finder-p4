@@ -53,7 +53,7 @@ const options = {
 
 function App() {
   const [user, setUser] = useState(null);
-  const [markers, setMarkers] = useState([])
+  const [marker, setMarker] = useState([])
   const [selected, setSelected] = useState(null)
   const [description, setDescription] = useState("")
   // const [onLogin, setOnLogin] = useState(null)
@@ -72,21 +72,25 @@ function App() {
   useEffect(() => {
     fetch("/places")
       .then(r => r.json()
-        .then(data => setPlaces(data))
+        .then(data => {console.log(data); setPlaces(data)})
       )
   }, [])
 
 
   // places.map(place => console.log(place.lat))
-  const first = places[0]
+  // const first = places[0]
   // console.log("places", places)
-  console.log("first lat", first)
+  // console.log("first", first)
 
   let count = 0
 
+  function handleButton(e){
+    console.log(e)
+  }
+  // TO DO - potentially change to handleButton
   const onMapClick = useCallback((e) => {
     count = count + 1 // setting mural name via counter for testing. TODO: allow input to set name, add picture, etc.
-    setPlaces((current) => [
+    setMarker((current) => [
       ...current,
       {
         lat: e.latLng.lat(),
@@ -125,12 +129,12 @@ function App() {
       }
     });
   }
-  
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    setMarkers(markers.map((marker) =>
-      selected.time === marker.time ? { ...marker, description: description } : marker))
-  }
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault()
+  //   setMarkers(markers.map((marker) =>
+  //     selected.time === marker.time ? { ...marker, description: description } : marker))
+  // }
 
   // console.log("in app.js: user:", user)
 
@@ -143,7 +147,7 @@ function App() {
       center={center}
       options={options}
       onLoad={onMapLoad}
-      handleSubmit={handleSubmit}
+      // handleSubmit={handleSubmit}
       handleNameEntry={handleNameEntry} />
 
   return (
@@ -155,7 +159,7 @@ function App() {
 
         <Switch>
           <Route path="/contributions">
-            <ContributionsContainer markers={markers} user={user} places={places} setPlaces={setPlaces} />
+            <ContributionsContainer user={user} places={places} setPlaces={setPlaces} />
           </Route>
           <Route path="/bucketlist">
             {/* <BucketList/> */}
@@ -175,6 +179,7 @@ function App() {
                 onClick={onMapClick}
                 places={places}
                 onLoad={onMapLoad}
+                selected={selected}
               >
                 {/* {markers.map((marker) => (
                   <Marker
@@ -191,6 +196,7 @@ function App() {
 
                 {places.map((place) => (
                   <Marker
+                    selected={selected}
                     key={place.id}
                     position={{ lat: parseFloat(place.lat), lng: parseFloat(place.lng) }}
                     draggable={true}
@@ -204,11 +210,16 @@ function App() {
 
                 {selected ? (
                   <InfoWindow
-                    position={{ lat: selected.lat, lng: selected.lng }}
+                    options={{ pixelOffset: new window.google.maps.Size(0, -30) }}
+                    position={{ lat: parseFloat(selected.lat), lng: parseFloat(selected.lng) }}
                     onCloseClick={() => setSelected(null)}>
-                    <div>
+                    <div className="infoWindow">
+                      {selected.user ? ( <>
                       <h2>{selected.title}</h2>
-                      <p>Contributed: {selected.date_uploaded}</p>
+                      <img src={selected.image_url} alt="mural_thumbnail" width="100" height="100" />
+                      <p> 📷 <strong>{selected.user.username}</strong></p>
+                      <p> on {selected.date_uploaded}</p> </>) 
+                      : <button onClick={e => handleButton(e)}>Add Photo</button>}
                       {/* <p>Contributed: {formatRelative(selected.date_uploaded, new Date())}</p> */}
                       {/* {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
                         <label for="mural-description">Description:</label>
@@ -217,7 +228,7 @@ function App() {
                     </div>
                   </InfoWindow>)
                   : null}
-                  
+
               </GoogleMap>
               <NewPlaceForm setPlaces={setPlaces} places={places} user={user} />
             </div>
