@@ -7,12 +7,11 @@ class CreatePlaces < ActiveRecord::Migration[6.1]
       t.text :description
       t.string :image_url
       t.integer :check_ins 
-      t.boolean :bucket_list 
       t.string :artist_name
       t.boolean :verified
       t.string :date_uploaded 
-      t.string :longitude 
-      t.string :latitude
+      t.decimal :lng 
+      t.decimal :lat
       t.string :type 
 
 

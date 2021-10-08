@@ -3,15 +3,14 @@ import { useEffect, useState } from "react"
 export default function ContributionsContainer({ markers, user, places, setPlaces }) {
 
 
-    console.log("in contributionsContainer: user: ", user)
-    console.log({places})
+    // console.log("in contributionsContainer: user: ", user)
 
-    useEffect(() => {
-        fetch("/places")
-            .then(r => r.json()
-                .then(data => setPlaces(data))
-            )
-    }, [])
+    // useEffect(() => {
+    //     fetch("/places")
+    //         .then(r => r.json()
+    //             .then(data => console.log(data))
+    //         )
+    // }, [])
 
 
     return (

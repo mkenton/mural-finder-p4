@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react'
-import { Route, BrowserRouter as Router, Switch, NavLink } from "react-router-dom"
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 import './App.css';
 import ContributionsContainer from "./components/ContributionsContainer"
 import Login from "./components/Login"
 import NewPlaceForm from "./components/NewPlaceForm"
+import NavBar from './components/NavBar';
 import {
   GoogleMap,
   useLoadScript,
@@ -11,7 +12,7 @@ import {
   InfoWindow,
 } from "@react-google-maps/api";
 import { formatRelative } from "date-fns";
-import { Button } from "./styles";
+// import { Button } from "./styles";
 // // TODO: import if want to use autocomplete for search
 //  import usePlacesAutocomplete, {
 //    getGeocode,
@@ -33,6 +34,7 @@ import { Button } from "./styles";
 
 import mapStyles from "./mapStyles";
 
+//Google Map Object options
 const libraries = ["places"]
 const mapContainerStyle = {
   width: "70vw",
@@ -42,7 +44,6 @@ const center = {
   lat: 41.89,
   lng: -87.64
 }
-
 const options = {
   styles: mapStyles,
   disableDefaultUI: true,
@@ -52,6 +53,13 @@ const options = {
 
 function App() {
   const [user, setUser] = useState(null);
+  const [markers, setMarkers] = useState([])
+  const [selected, setSelected] = useState(null)
+  const [description, setDescription] = useState("")
+  // const [onLogin, setOnLogin] = useState(null)
+  const [places, setPlaces] = useState([])
+
+
   useEffect(() => {
     // auto-login
     fetch("/me").then((r) => {
@@ -61,23 +69,27 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    fetch("/places")
+      .then(r => r.json()
+        .then(data => setPlaces(data))
+      )
+  }, [])
 
 
-
+  // places.map(place => console.log(place.lat))
+  const first = places[0]
+  // console.log("places", places)
+  console.log("first lat", first)
 
   let count = 0
-  const [markers, setMarkers] = useState([])
-  const [selected, setSelected] = useState(null)
-  const [description, setDescription] = useState("")
-  const [onLogin, setOnLogin] = useState(null)
-  const [places, setPlaces] = useState([])
 
   const onMapClick = useCallback((e) => {
     count = count + 1 // setting mural name via counter for testing. TODO: allow input to set name, add picture, etc.
     setMarkers((current) => [
       ...current,
       {
-        muralName: `Mural ${count}`,
+        title: `Mural ${count}`,
         lat: e.latLng.lat(),
         lng: e.latLng.lng(),
         time: new Date()
@@ -114,6 +126,7 @@ function App() {
       }
     });
   }
+  
   const handleSubmit = (e) => {
     e.preventDefault()
     setMarkers(markers.map((marker) =>
@@ -121,57 +134,50 @@ function App() {
   }
 
   // console.log("in app.js: user:", user)
-  
-  if (!user) 
+
+  if (!user)
     return <Login
-    onLogin={setUser}
-    markers={markers}
-    selected={selected}
-    setSelected={setSelected}
-    center={center}
-    options={options}
-    onLoad={onMapLoad}
-    handleSubmit={handleSubmit}
-    handleNameEntry={handleNameEntry} />
+      onLogin={setUser}
+      markers={markers}
+      selected={selected}
+      setSelected={setSelected}
+      center={center}
+      options={options}
+      onLoad={onMapLoad}
+      handleSubmit={handleSubmit}
+      handleNameEntry={handleNameEntry} />
 
-    return (
-      <Router>
-        <div className="App">
+  return (
+    <Router>
+      <div className="App">
 
-          {/* TODO: Turn NavBar into Component */}
-          <nav className="navbar">
-            {/* <NavLink activeClassName="active-nav" className="login-link" to="/loginpage">Login</NavLink> */}
-            <Button className="login-link" onClick={handleLogoutClick}>
-              Logout
-            </Button>
-            <NavLink exact activeClassName="active-nav" className="navbar-links" to="/">MAP</NavLink>
-            <NavLink activeClassName="active-nav" className="navbar-links" to="/contributions">CONTRIBUTIONS</NavLink>
-            <NavLink activeClassName="active-nav" className="navbar-links" to="/bucketlist">BUCKET LIST</NavLink>
-          </nav>
+        {/* TODO: Turn NavBar into Component */}
+        <NavBar handleLogoutClick={handleLogoutClick} />
 
-          <Switch>
-            <Route path="/contributions">
-              <ContributionsContainer markers={markers} user={user} places={places} setPlaces={setPlaces}/>
-            </Route>
-            <Route path="/bucketlist">
-              {/* <BucketList/> */}
-              <p>Bucket List</p>
-            </Route>
-            {/* <Route path="/loginpage">
+        <Switch>
+          <Route path="/contributions">
+            <ContributionsContainer markers={markers} user={user} places={places} setPlaces={setPlaces} />
+          </Route>
+          <Route path="/bucketlist">
+            {/* <BucketList/> */}
+            <p>Bucket List</p>
+          </Route>
+          {/* <Route path="/loginpage">
               <Login onLogin={setOnLogin}/>
             </Route> */}
-            <Route exact path="/">
-              {/* TODO: Refactor map into Home w/ map and Contributions w/ map, add header w/ username */}
-              <div className="grid-container">
+          <Route exact path="/">
+            {/* TODO: Refactor map into Home w/ map and Contributions w/ map, add header w/ username */}
+            <div className="grid-container">
               <GoogleMap
                 mapContainerStyle={mapContainerStyle}
                 zoom={10}
                 center={center}
                 options={options}
                 onClick={onMapClick}
+                places={places}
                 onLoad={onMapLoad}
               >
-                {markers.map((marker) => (
+                {/* {markers.map((marker) => (
                   <Marker
                     key={marker.time.toISOString()}
                     position={{ lat: marker.lat, lng: marker.lng }}
@@ -182,6 +188,19 @@ function App() {
                       setSelected(marker)
                     }}
                   />
+                ))} */}
+
+                {places.map((place) => (
+                  <Marker
+                    key={place.id}
+                    position={{ lat: parseFloat(place.lat), lng: parseFloat(place.lng) }}
+                    draggable={true}
+                    animation={2}
+                    onClick={(e) => {
+                      // console.log(e)
+                      setSelected(place)
+                    }}
+                  />
                 ))}
 
                 {selected ? (
@@ -189,26 +208,27 @@ function App() {
                     position={{ lat: selected.lat, lng: selected.lng }}
                     onCloseClick={() => setSelected(null)}>
                     <div>
-                      <h2>{selected.muralName}</h2>
+                      <h2>{selected.title}</h2>
                       <p>Contributed: {formatRelative(selected.time, new Date())}</p>
                       {/* {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
                         <label for="mural-description">Description:</label>
                         <input onChange={handleNameEntry} type="text" id="mural-description" name="mural-description"></input>
                       </form>} */}
                     </div>
-                  </InfoWindow>) 
+                  </InfoWindow>)
                   : null}
+                  
               </GoogleMap>
-              <NewPlaceForm setPlaces={setPlaces} places={places} user={user}/>
-              </div>
-            </Route>
-            <Route path="*"><h1 className="page-not-found">404 Page Not Found :(</h1></Route>
-          </Switch>
-        </div>
-      </Router>
+              <NewPlaceForm setPlaces={setPlaces} places={places} user={user} />
+            </div>
+          </Route>
+          <Route path="*"><h1 className="page-not-found">404 Page Not Found :(</h1></Route>
+        </Switch>
+      </div>
+    </Router>
 
-    );
-  }
+  );
+}
 
 
 export default App;
