@@ -193,7 +193,7 @@ function App() {
                 {places.map((place) => (
                   <Marker
                     key={place.id}
-                    position={{ lat: parseInt(place.lat), lng: parseInt(place.lng) }}
+                    position={{ lat: parseFloat(place.lat), lng: parseFloat(place.lng) }}
                     draggable={true}
                     animation={2}
                     onClick={(e) => {
