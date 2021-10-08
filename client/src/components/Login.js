@@ -10,7 +10,7 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
-import { formatRelative } from "date-fns";
+// import { formatRelative } from "date-fns";
 
 function Login({ onLogin, places, selected, setSelected, center, options, onMapLoad }) {
   const [showLogin, setShowLogin] = useState(true);
@@ -50,13 +50,7 @@ function Login({ onLogin, places, selected, setSelected, center, options, onMapL
                 <h2>{selected.title}</h2>
                 <img src={selected.image_url} alt="mural_thumbnail" width="140" height="140" />
                 <p> 📷 <strong>{selected.user.username}</strong></p>
-                <p>on: {selected.date_uploaded}</p>
-                {/* <p>Contributed: {formatRelative(selected.date_uploaded, new Date())}</p> */}
-                {/* {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
-                <label for="mural-description">Description:</label>
-                <input onChange={handleNameEntry} type="text" id="mural-description" name="mural-description"></input>
-              </form>} */}
-              </div>
+                <p> Submitted: <strong>{selected.date_uploaded}</strong></p>              </div>
             </InfoWindow>) : null}
         </GoogleMap>
       </div>

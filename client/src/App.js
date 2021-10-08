@@ -11,8 +11,9 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
-import { formatRelative } from "date-fns";
+// import { formatRelative } from "date-fns";
 // import { Button } from "./styles";
+
 // // TODO: import if want to use autocomplete for search
 //  import usePlacesAutocomplete, {
 //    getGeocode,
@@ -27,8 +28,6 @@ import { formatRelative } from "date-fns";
 //   ComboboxList,
 //   ComboboxOption,
 // } from "@reach/combobox";
-
-
 // import "@reach/combobox/styles.css";
 
 
@@ -60,6 +59,7 @@ function App() {
   const [places, setPlaces] = useState([])
 
 
+
   useEffect(() => {
     // auto-login
     fetch("/me").then((r) => {
@@ -88,16 +88,15 @@ function App() {
     console.log(e)
   }
   // TO DO - potentially change to handleButton
-  const handleSetMarker = useCallback((e) => {
-    // console.log(e);
+function handleSetMarker(e){
     setMarker(
       {
         lat: e.latLng.lat(),
         lng: e.latLng.lng(),
         date_uploaded: new Date().toLocaleDateString()
-      },
-    );
-  }, [])
+      }
+      )
+    }
 
   console.log("marker in App.js: ", marker)
   const { isLoaded, loadError } = useLoadScript({
@@ -131,8 +130,28 @@ function App() {
         'Content-Type': 'application/json',
       },
     }).then((r) => r.json())
-      .then((data) => console.log("Patch succeded with", data))
+      .then((data) => {
+        console.log(data.id)
+        setPlaces(places.map(place => data.id === place.id ? place.checkins = place.checkins + 1 : place))  
+      })
   }
+
+//   function handleBucketList(user_id, place_id) {
+//     console.log(`Adding ${place_id} to bucket list of user ${user_id}`)
+//     // add place.id to bucket list array
+//     fetch(`/users/${user_id}`, {
+//       method: "PATCH",
+//       headers: {
+// // update bucket list array with new place.id
+//         'Content-Type': 'application/json',
+//       },
+//       // body: JSON.stringify(updatedObj)
+//     }).then((r) => r.json())
+//       .then((data) => {
+//         console.log(data.id)
+//         // setUser with user.id === data.id to have bucket_list udpated with new array
+//       })
+//   }
 
   function handleLogoutClick() {
     fetch("/logout", { method: "DELETE" }).then((r) => {
@@ -159,8 +178,7 @@ function App() {
       center={center}
       options={options}
       onLoad={onMapLoad}
-      // handleSubmit={handleSubmit}
-      handleNameEntry={handleNameEntry} />
+ />
 
   return (
     <Router>
@@ -171,7 +189,7 @@ function App() {
 
         <Switch>
           <Route path="/contributions">
-            <ContributionsContainer user={user} places={places} setPlaces={setPlaces} />
+            <ContributionsContainer user={user} places={places}/>
           </Route>
           <Route path="/bucketlist">
             {/* <BucketList/> */}
@@ -188,7 +206,7 @@ function App() {
                 zoom={10}
                 center={center}
                 options={options}
-                onClick={handleSetMarker}
+                onClick={(e) => handleSetMarker(e)}
                 places={places}
                 onLoad={onMapLoad}
                 selected={selected}
@@ -232,31 +250,29 @@ function App() {
 
                 {selected ? (
                   <InfoWindow
-                    options={{ pixelOffset: new window.google.maps.Size(0, -30) }}
+                  places={places}  
+                  options={{ pixelOffset: new window.google.maps.Size(0, -30) }}
                     position={{ lat: parseFloat(selected.lat), lng: parseFloat(selected.lng) }}
                     onCloseClick={() => setSelected(null)}>
                     <div className="infoWindow">
                       {selected.user ? (
                         <>
                           <h2>{selected.title}</h2>
-                          <img src={selected.image_url} alt="mural_thumbnail" width="100" height="100" />
+                          <img src={selected.image_url} alt="mural_thumbnail" width="200" height="200" />
                           <p> 📷 <strong>{selected.user.username}</strong></p>
-                          <p> on {selected.date_uploaded}</p>
+                          <p> Submitted: <strong>{selected.date_uploaded}</strong></p>
+                          <p> <strong> {selected.check_ins} total visits</strong> </p>
                           <button onClick={() => handleCheckIn(selected.id)}>Check In</button>
+                          {/* <button onClick={() => handleBucketList(user.id, selected.id)}>Add to Bucket List</button> */}
                         </>
                       )
                         : <button onClick={e => handleButton(e)}>Add Photo</button>}
-                      {/* <p>Contributed: {formatRelative(selected.date_uploaded, new Date())}</p> */}
-                      {/* {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
-                        <label for="mural-description">Description:</label>
-                        <input onChange={handleNameEntry} type="text" id="mural-description" name="mural-description"></input>
-                      </form>} */}
                     </div>
                   </InfoWindow>)
                   : null}
 
               </GoogleMap>
-              <NewPlaceForm setMarker={setMarker} marker={marker} user={user} />
+              <NewPlaceForm handleSetMarker={handleSetMarker} places={places} setPlaces={setPlaces} setMarker={setMarker} marker={marker} user={user} />
             </div>
           </Route>
           <Route path="*"><h1 className="page-not-found">404 Page Not Found :(</h1></Route>

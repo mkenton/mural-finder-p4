@@ -1,17 +1,6 @@
 import Contribution from "./Contribution"
-import { useEffect, useState } from "react"
-export default function ContributionsContainer({ markers, user, places, setPlaces }) {
-
-
-    // console.log("in contributionsContainer: user: ", user)
-
-    // useEffect(() => {
-    //     fetch("/places")
-    //         .then(r => r.json()
-    //             .then(data => console.log(data))
-    //         )
-    // }, [])
-
+// import { useEffect, useState } from "react"
+export default function ContributionsContainer({ user, places}) {
 
     return (
         <div className="flex-container">
