@@ -16,6 +16,7 @@ export default function LoggedInMapPage({ setSelected,
     user, onMapLoad }) {
 
     const [marker, setMarker] = useState([])
+    const [bucketList, setBucketList] = useState(user.bucket_list)
 
     const mapContainerStyle = {
         width: "70vw",
@@ -44,19 +45,22 @@ export default function LoggedInMapPage({ setSelected,
                 setPlaces(places.map(place => data.id === place.id ? place.checkins = place.checkins + 1 : place))
             })
     }
-    function handleBucketList(user_id, place_id) {
-      console.log(`Adding ${place_id} to bucket list of user ${user_id}`)
-      // add place.id to bucket list array
+    function handleBucketList(user_id, user_bucket_list, place_id) {
+    //   console.log(`Adding ${place_id} to bucket list of user ${user_id}`)
+    //   const updatedList = user.bucket_list + `,${place_id}`
+    //   console.log(updatedList, "for user ", user_id)
       fetch(`/users/${user_id}`, {
         method: "PATCH",
         headers: {
-  // update bucket list array with new place.id
-          'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
         },
-        // body: JSON.stringify(updatedObj)
+        body: JSON.stringify({bucket_list: user_bucket_list + `,${place_id}`})
       }).then((r) => r.json())
         .then((data) => {
-          console.log(data.id)
+        //   console.log("data:", data)
+          console.log("data.bucket_list", data.bucket_list)
+          setBucketList(data.bucket_list + `,${place_id}`)
+          console.log("state: " , bucketList)
           // setUser with user.id === data.id to have bucket_list udpated with new array
         })
     }
@@ -121,11 +125,12 @@ export default function LoggedInMapPage({ setSelected,
 
                             <h2>{selected.title}</h2>
                             <img src={selected.image_url} alt="mural_thumbnail" width="270" height="auto" />
-                            <p> 📷 <strong>{selected.user.username}</strong></p>
+                            <p> Artist: 🎨<strong>{selected.artist_name}</strong></p>
+                            <p> Photo by: 📷  <strong>{selected.user.username}</strong></p>
                             <p> Submitted: <strong>{selected.date_uploaded}</strong></p>
                             <p>Total checkins: <strong>{selected.check_ins > 0 ? selected.check_ins : 0}</strong></p>
                             <Button onClick={() => handleCheckIn(selected.id)}>Check In</Button>
-                            <Button onClick={() => handleBucketList(user.id, selected.id)}>Add to Bucket List</Button>
+                            <Button onClick={() => handleBucketList(user.id, user.bucket_list, selected.id)}>Add to Bucket List</Button>
                         </div>
                     </InfoWindow>)
                     : null}

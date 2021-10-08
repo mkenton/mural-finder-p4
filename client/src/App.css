@@ -44,16 +44,18 @@
 
 .flex-container {
     display: flex;
-    max-width: 95vw;
+    max-width: 85vw;
     flex-wrap: wrap;
     background-color: rgb(213, 247, 255)
 }
 
 .contribution {
     display: grid;
-    width: 150px;
-    margin: 10px;
-    /* align-content: center; */
+    width: 250px;
+    grid-gap: 10px;
+}
+.contribution > * {
+    align-content: center;
 }
 
 .grid-container{

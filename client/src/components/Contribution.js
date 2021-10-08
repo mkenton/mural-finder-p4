@@ -1,11 +1,11 @@
 export default function Contribution({ marker, place }) {
       
         return (
-                <section className="contribution">
+                <div className="contribution" style={{margin: "10px"}}>
                         <h2>{place.title}</h2>
-                        <img src={place.image_url} width="100" height="100" alt="mural_pic" />
+                        <div><img src={place.image_url} width="auto" height="150" alt="mural_pic" /></div>
                         <p>Total checkins: <strong>{place.check_ins >0 ? place.check_ins : 0}</strong></p>
-                </section>
+                </div>
         )
 
 
