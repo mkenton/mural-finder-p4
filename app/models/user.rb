@@ -5,4 +5,9 @@ class User < ApplicationRecord
     validates :username, uniqueness: {case_sensitive: false} , presence: true
 
     has_many :places
+
+    # def bucket_list_murals
+    #     self.bucket_list
+    # end
+
 end

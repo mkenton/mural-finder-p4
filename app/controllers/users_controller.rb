@@ -11,10 +11,20 @@ class UsersController < ApplicationController
     render json: @current_user
   end
 
+  def update
+    user = User.find_by(id: params[:id])
+    user.update!(update_user_params)
+    render json: user, status: :ok
+  end
+
   private
 
   def user_params
     params.permit(:username, :password, :password_confirmation)
+  end
+
+  def update_user_params
+    params.permit(:bucket_list)
   end
 
 end

@@ -10,9 +10,9 @@ import {
   Marker,
   InfoWindow,
 } from "@react-google-maps/api";
-import { formatRelative } from "date-fns";
+// import { formatRelative } from "date-fns";
 
-function Login({ onLogin, markers, selected, setSelected, center, options, onMapLoad, handleSubmit, handleNameEntry }) {
+function Login({ onLogin, places, selected, setSelected, center, options, onMapLoad }) {
   const [showLogin, setShowLogin] = useState(true);
 
   return (
@@ -28,31 +28,29 @@ function Login({ onLogin, markers, selected, setSelected, center, options, onMap
           options={options}
           onLoad={onMapLoad}
         >
-          {markers.map((marker) => (
+          {places.map((place) => (
             <Marker
-              key={marker.time.toISOString()}
-              position={{ lat: marker.lat, lng: marker.lng }}
+              icon={'http://maps.google.com/mapfiles/kml/paddle/blu-blank.png'}
+              key={place.id}
+              position={{ lat: parseFloat(place.lat), lng: parseFloat(place.lng) }}
               animation={2}
               onClick={(e) => {
                 // console.log(e)
-                setSelected(marker)
+                setSelected(place)
               }}
             />
           ))}
 
           {selected ? (
             <InfoWindow
-              position={{ lat: selected.lat, lng: selected.lng }}
+              options={{ pixelOffset: new window.google.maps.Size(0, -30) }}
+              position={{ lat: parseFloat(selected.lat), lng: parseFloat(selected.lng) }}
               onCloseClick={() => setSelected(null)}>
-              <div>
-                <h2>{selected.muralName}</h2>
-                <p>Contributed: {formatRelative(selected.time, new Date())}</p>
-                {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
-                  <label for="mural-description">Description:</label>
-                  <input onChange={handleNameEntry} type="text" id="mural-description" name="mural-description"></input>
-                </form>}
-              </div>
-
+              <div className="infoWindow">
+                <h2>{selected.title}</h2>
+                <img src={selected.image_url} alt="mural_thumbnail" width="140" height="140" />
+                <p> 📷 <strong>{selected.user.username}</strong></p>
+                <p> Submitted: <strong>{selected.date_uploaded}</strong></p>              </div>
             </InfoWindow>) : null}
         </GoogleMap>
       </div>
