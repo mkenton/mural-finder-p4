@@ -30,6 +30,6 @@ class PlacesController < ApplicationController
     end
 
     def place_params
-        params.permit(:title, :description, :image_url, :artist_name, :lng, :lat, :check_ins)
+        params.permit(:title, :description, :image_url, :artist_name, :lng, :lat, :check_ins, :date_uploaded)
     end
 end

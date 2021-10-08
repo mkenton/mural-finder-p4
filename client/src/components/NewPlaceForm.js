@@ -12,7 +12,7 @@ export default function NewPlaceForm({setPlaces, places, setMarker, marker, user
 
 
   function handleSubmit(e) {
-    e.preventDefault();
+    // e.preventDefault();
     setIsLoading(true);
     console.log("in form, marker:", marker, "user: ", user)
     fetch("/places", {
@@ -27,17 +27,15 @@ export default function NewPlaceForm({setPlaces, places, setMarker, marker, user
         title: title,
         image_url: imageUrl,
         description: description,
-        user_id: user.id
-        //user_id fails as well
+        user_id: user.id,
+        date_uploaded: marker.date_uploaded
       }),
     }).then((r) => {
       setIsLoading(false);
       if (r.ok) {
-        //setPlaces([...places, r])
-        //setPlaces fails as "not a function"
-        console.log(places)
-        // setMarker([])
-        // history.push("/contributions");
+        setPlaces([...places, r])
+        // console.log(places)
+        setMarker([])
       } else {
         r.json().then((err) => {
           setErrors(err.errors)

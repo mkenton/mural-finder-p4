@@ -70,3 +70,7 @@ border: black solid 5px;
 .sidebar > *{
 margin-left: 5%;
 }
+
+.infoWindow {
+    text-align: center;
+}
