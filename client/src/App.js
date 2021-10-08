@@ -3,8 +3,8 @@ import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 import './App.css';
 import ContributionsContainer from "./components/ContributionsContainer"
 import Login from "./components/Login"
-import NewPlaceForm from "./components/NewPlaceForm"
 import NavBar from './components/NavBar';
+import LoggedInMapPage from './components/LoggedInMapPage';
 import {
   GoogleMap,
   useLoadScript,
@@ -34,6 +34,7 @@ import {
 import mapStyles from "./mapStyles";
 
 //Google Map Object options
+// move into new components
 const libraries = ["places"]
 const mapContainerStyle = {
   width: "70vw",
@@ -52,12 +53,13 @@ const options = {
 
 function App() {
   const [user, setUser] = useState(null);
-  const [marker, setMarker] = useState([])
+  // moved to component LogggedInMap
+  // const [marker, setMarker] = useState([])
   const [selected, setSelected] = useState(null)
+  // const [places, setPlaces] = useState([])
   const [description, setDescription] = useState("")
   // const [onLogin, setOnLogin] = useState(null)
   const [places, setPlaces] = useState([])
-
 
 
   useEffect(() => {
@@ -69,6 +71,7 @@ function App() {
     });
   }, []);
 
+  // moved to LoggedInMapPage, but still need in Login component
   useEffect(() => {
     fetch("/places")
       .then(r => r.json()
@@ -84,21 +87,21 @@ function App() {
 
 
 
-  function handleButton(e) {
-    console.log(e)
-  }
-  // TO DO - potentially change to handleButton
-function handleSetMarker(e){
-    setMarker(
-      {
-        lat: e.latLng.lat(),
-        lng: e.latLng.lng(),
-        date_uploaded: new Date().toLocaleDateString()
-      }
-      )
-    }
+  // // moved functions to component LoggedInMapPage
+  // function handleButton(e) {
+  //   console.log(e)
+  // }
+  // function handleSetMarker(e){
+  //     setMarker(
+  //       {
+  //         lat: e.latLng.lat(),
+  //         lng: e.latLng.lng(),
+  //         date_uploaded: new Date().toLocaleDateString()
+  //       }
+  //       )
+  //     }
 
-  console.log("marker in App.js: ", marker)
+  // console.log("marker in App.js: ", marker)
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GMAPS_API_KEY,
     libraries
@@ -113,45 +116,47 @@ function handleSetMarker(e){
   if (loadError) return "Error loading maps"
   if (!isLoaded) return "Loading Page"
 
-  const handleNameEntry = (event) => {
-    event.preventDefault();
-    //  console.log("filter for correct marker:", markers.filter(marker => marker.time === selected.time))
-    //map over markers and set description for marker where marker.id = selected.id
-    setDescription(event.target.value)
-    console.log(event.target.value)
-  }
+  // // TO DO: Delete, Probably not using
+  // const handleNameEntry = (event) => {
+  //   event.preventDefault();
+  //   //  console.log("filter for correct marker:", markers.filter(marker => marker.time === selected.time))
+  //   //map over markers and set description for marker where marker.id = selected.id
+  //   setDescription(event.target.value)
+  //   console.log(event.target.value)
+  // }
 
-  function handleCheckIn(id) {
-    console.log("check in on ID:", id)
-    fetch(`/places/${id}/like`, {
-      method: "PATCH",
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    }).then((r) => r.json())
-      .then((data) => {
-        console.log(data.id)
-        setPlaces(places.map(place => data.id === place.id ? place.checkins = place.checkins + 1 : place))  
-      })
-  }
+  // // moved to LoggedInMap
+  // function handleCheckIn(id) {
+  //   console.log("check in on ID:", id)
+  //   fetch(`/places/${id}/like`, {
+  //     method: "PATCH",
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //   }).then((r) => r.json())
+  //     .then((data) => {
+  //       console.log(data.id)
+  //       setPlaces(places.map(place => data.id === place.id ? place.checkins = place.checkins + 1 : place))  
+  //     })
+  // }
 
-//   function handleBucketList(user_id, place_id) {
-//     console.log(`Adding ${place_id} to bucket list of user ${user_id}`)
-//     // add place.id to bucket list array
-//     fetch(`/users/${user_id}`, {
-//       method: "PATCH",
-//       headers: {
-// // update bucket list array with new place.id
-//         'Content-Type': 'application/json',
-//       },
-//       // body: JSON.stringify(updatedObj)
-//     }).then((r) => r.json())
-//       .then((data) => {
-//         console.log(data.id)
-//         // setUser with user.id === data.id to have bucket_list udpated with new array
-//       })
-//   }
+  //   function handleBucketList(user_id, place_id) {
+  //     console.log(`Adding ${place_id} to bucket list of user ${user_id}`)
+  //     // add place.id to bucket list array
+  //     fetch(`/users/${user_id}`, {
+  //       method: "PATCH",
+  //       headers: {
+  // // update bucket list array with new place.id
+  //         'Content-Type': 'application/json',
+  //       },
+  //       // body: JSON.stringify(updatedObj)
+  //     }).then((r) => r.json())
+  //       .then((data) => {
+  //         console.log(data.id)
+  //         // setUser with user.id === data.id to have bucket_list udpated with new array
+  //       })
+  //   }
 
   function handleLogoutClick() {
     fetch("/logout", { method: "DELETE" }).then((r) => {
@@ -169,17 +174,18 @@ function handleSetMarker(e){
 
   // console.log("in app.js: user:", user)
 
+  // URGENT: ADD BACK IN
   if (!user)
     return <Login
-      onLogin={setUser}
       places={places}
       selected={selected}
-      setSelected={setSelected}
-      center={center}
-      options={options}
-      onLoad={onMapLoad}
- />
-
+      onLogin={setUser}
+      // setSelected={setSelected}
+      // center={center}
+      // options={options}
+      // setPlaces={setPlaces}
+      // onLoad={onMapLoad}
+    />
   return (
     <Router>
       <div className="App">
@@ -189,7 +195,7 @@ function handleSetMarker(e){
 
         <Switch>
           <Route path="/contributions">
-            <ContributionsContainer user={user} places={places}/>
+            <ContributionsContainer user={user} places={places} />
           </Route>
           <Route path="/bucketlist">
             {/* <BucketList/> */}
@@ -199,81 +205,7 @@ function handleSetMarker(e){
               <Login onLogin={setOnLogin}/>
             </Route> */}
           <Route exact path="/">
-            {/* TODO: Refactor map into Home w/ map and Contributions w/ map, add header w/ username */}
-            <div className="grid-container">
-              <GoogleMap
-                mapContainerStyle={mapContainerStyle}
-                zoom={10}
-                center={center}
-                options={options}
-                onClick={(e) => handleSetMarker(e)}
-                places={places}
-                onLoad={onMapLoad}
-                selected={selected}
-              >
-                {/* {markers.map((marker) => (
-                  <Marker
-                    key={marker.time.toISOString()}
-                    position={{ lat: marker.lat, lng: marker.lng }}
-                    draggable={true}
-                    animation={2}
-                    onClick={(e) => {
-                      // console.log(e)
-                      setSelected(marker)
-                    }}
-                  />
-                ))} */}
-                {marker ? (
-                  <Marker
-                    // scale={1}
-                    position={{ lat: parseFloat(marker.lat), lng: parseFloat(marker.lng) }}
-                    draggable={true}
-                    onDragEnd={handleSetMarker} />
-                ) : ("")}
-
-                {places.map((place) => (
-                  <Marker
-                    // style={{fillColor: "#0073E6"}}
-                    options={{ scaledSize: 1.5 }}
-                    icon={'http://maps.google.com/mapfiles/kml/paddle/blu-blank.png'}
-                    selected={selected}
-                    key={place.id}
-                    position={{ lat: parseFloat(place.lat), lng: parseFloat(place.lng) }}
-                    draggable={false}
-                    animation={2}
-                    onClick={(e) => {
-                      // console.log(e)
-                      setSelected(place)
-                    }}
-                  />
-                ))}
-
-                {selected ? (
-                  <InfoWindow
-                  places={places}  
-                  options={{ pixelOffset: new window.google.maps.Size(0, -30) }}
-                    position={{ lat: parseFloat(selected.lat), lng: parseFloat(selected.lng) }}
-                    onCloseClick={() => setSelected(null)}>
-                    <div className="infoWindow">
-                      {selected.user ? (
-                        <>
-                          <h2>{selected.title}</h2>
-                          <img src={selected.image_url} alt="mural_thumbnail" width="200" height="200" />
-                          <p> 📷 <strong>{selected.user.username}</strong></p>
-                          <p> Submitted: <strong>{selected.date_uploaded}</strong></p>
-                          <p> <strong> {selected.check_ins} total visits</strong> </p>
-                          <button onClick={() => handleCheckIn(selected.id)}>Check In</button>
-                          {/* <button onClick={() => handleBucketList(user.id, selected.id)}>Add to Bucket List</button> */}
-                        </>
-                      )
-                        : <button onClick={e => handleButton(e)}>Add Photo</button>}
-                    </div>
-                  </InfoWindow>)
-                  : null}
-
-              </GoogleMap>
-              <NewPlaceForm handleSetMarker={handleSetMarker} places={places} setPlaces={setPlaces} setMarker={setMarker} marker={marker} user={user} />
-            </div>
+            <LoggedInMapPage setSelected={setSelected} selected={selected} setPlaces={setPlaces} places={places} user={user} />
           </Route>
           <Route path="*"><h1 className="page-not-found">404 Page Not Found :(</h1></Route>
         </Switch>
@@ -285,3 +217,80 @@ function handleSetMarker(e){
 
 
 export default App;
+
+
+// // code moved into LoggedInMapPage
+// div className="grid-container">
+//               <GoogleMap
+//                 mapContainerStyle={mapContainerStyle}
+//                 zoom={10}
+//                 center={center}
+//                 options={options}
+//                 onClick={(e) => handleSetMarker(e)}
+//                 places={places}
+//                 onLoad={onMapLoad}
+//                 selected={selected}
+//               >
+//                 {/* {markers.map((marker) => (
+//                   <Marker
+//                     key={marker.time.toISOString()}
+//                     position={{ lat: marker.lat, lng: marker.lng }}
+//                     draggable={true}
+//                     animation={2}
+//                     onClick={(e) => {
+//                       // console.log(e)
+//                       setSelected(marker)
+//                     }}
+//                   />
+//                 ))} */}
+//                 {marker ? (
+//                   <Marker
+//                     // scale={1}
+//                     position={{ lat: parseFloat(marker.lat), lng: parseFloat(marker.lng) }}
+//                     draggable={true}
+//                     onDragEnd={handleSetMarker} />
+//                 ) : ("")}
+
+//                 {places.map((place) => (
+//                   <Marker
+//                     // style={{fillColor: "#0073E6"}}
+//                     options={{ scaledSize: 1.5 }}
+//                     icon={'http://maps.google.com/mapfiles/kml/paddle/blu-blank.png'}
+//                     selected={selected}
+//                     key={place.id}
+//                     position={{ lat: parseFloat(place.lat), lng: parseFloat(place.lng) }}
+//                     draggable={false}
+//                     animation={2}
+//                     onClick={(e) => {
+//                       // console.log(e)
+//                       setSelected(place)
+//                     }}
+//                   />
+//                 ))}
+
+//                 {selected ? (
+//                   <InfoWindow
+//                   places={places}  
+//                   options={{ pixelOffset: new window.google.maps.Size(0, -30) }}
+//                     position={{ lat: parseFloat(selected.lat), lng: parseFloat(selected.lng) }}
+//                     onCloseClick={() => setSelected(null)}>
+//                     <div className="infoWindow">
+//                       {selected.user ? (
+//                         <>
+//                           <h2>{selected.title}</h2>
+//                           <img src={selected.image_url} alt="mural_thumbnail" width="200" height="200" />
+//                           <p> 📷 <strong>{selected.user.username}</strong></p>
+//                           <p> Submitted: <strong>{selected.date_uploaded}</strong></p>
+//                           <p> <strong> {selected.check_ins} total visits</strong> </p>
+//                           <button onClick={() => handleCheckIn(selected.id)}>Check In</button>
+//                           {/* <button onClick={() => handleBucketList(user.id, selected.id)}>Add to Bucket List</button> */}
+//                         </>
+//                       )
+//                         : <button onClick={e => handleButton(e)}>Add Photo</button>}
+//                     </div>
+//                   </InfoWindow>)
+//                   : null}
+
+//               </GoogleMap>
+//               <NewPlaceForm handleSetMarker={handleSetMarker} places={places} setPlaces={setPlaces} setMarker={setMarker} marker={marker} user={user} />
+//             </div>
