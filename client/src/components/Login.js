@@ -30,7 +30,7 @@ function Login({ onLogin, places, selected, setSelected, center, options, onMapL
         >
           {places.map((place) => (
             <Marker
-              // selected={selected}
+              icon={'http://maps.google.com/mapfiles/kml/paddle/blu-blank.png'}
               key={place.id}
               position={{ lat: parseFloat(place.lat), lng: parseFloat(place.lng) }}
               animation={2}
@@ -49,7 +49,7 @@ function Login({ onLogin, places, selected, setSelected, center, options, onMapL
               <div className="infoWindow">
                 <h2>{selected.title}</h2>
                 <img src={selected.image_url} alt="mural_thumbnail" width="140" height="140" />
-                <p>Contributed by: {selected.user_id}</p>
+                <p> 📷 <strong>{selected.user.username}</strong></p>
                 <p>on: {selected.date_uploaded}</p>
                 {/* <p>Contributed: {formatRelative(selected.date_uploaded, new Date())}</p> */}
                 {/* {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>

@@ -72,7 +72,7 @@ function App() {
   useEffect(() => {
     fetch("/places")
       .then(r => r.json()
-        .then(data => {console.log(data); setPlaces(data)})
+        .then(data => { console.log(data); setPlaces(data) })
       )
   }, [])
 
@@ -82,14 +82,14 @@ function App() {
   // console.log("places", places)
   // console.log("first", first)
 
- 
 
-  function handleButton(e){
+
+  function handleButton(e) {
     console.log(e)
   }
   // TO DO - potentially change to handleButton
   const handleSetMarker = useCallback((e) => {
-    console.log(e);
+    // console.log(e);
     setMarker(
       {
         lat: e.latLng.lat(),
@@ -99,6 +99,7 @@ function App() {
     );
   }, [])
 
+  console.log("marker in App.js: ", marker)
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GMAPS_API_KEY,
     libraries
@@ -119,6 +120,18 @@ function App() {
     //map over markers and set description for marker where marker.id = selected.id
     setDescription(event.target.value)
     console.log(event.target.value)
+  }
+
+  function handleCheckIn(id) {
+    console.log("check in on ID:", id)
+    fetch(`/places/${id}/like`, {
+      method: "PATCH",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then((r) => r.json())
+      .then((data) => console.log("Patch succeded with", data))
   }
 
   function handleLogoutClick() {
@@ -193,17 +206,17 @@ function App() {
                   />
                 ))} */}
                 {marker ? (
-                <Marker
-                // scale={1}
-                position={{ lat: parseFloat(marker.lat), lng: parseFloat(marker.lng) }}
-                draggable={true}
-                onDragEnd={handleSetMarker}/>
-                  ) : ("")}
-                  
+                  <Marker
+                    // scale={1}
+                    position={{ lat: parseFloat(marker.lat), lng: parseFloat(marker.lng) }}
+                    draggable={true}
+                    onDragEnd={handleSetMarker} />
+                ) : ("")}
+
                 {places.map((place) => (
                   <Marker
                     // style={{fillColor: "#0073E6"}}
-                    options={{scaledSize: 1.5}}
+                    options={{ scaledSize: 1.5 }}
                     icon={'http://maps.google.com/mapfiles/kml/paddle/blu-blank.png'}
                     selected={selected}
                     key={place.id}
@@ -223,12 +236,16 @@ function App() {
                     position={{ lat: parseFloat(selected.lat), lng: parseFloat(selected.lng) }}
                     onCloseClick={() => setSelected(null)}>
                     <div className="infoWindow">
-                      {selected.user ? ( <>
-                      <h2>{selected.title}</h2>
-                      <img src={selected.image_url} alt="mural_thumbnail" width="100" height="100" />
-                      <p> 📷 <strong>{selected.user.username}</strong></p>
-                      <p> on {selected.date_uploaded}</p> </>) 
-                      : <button onClick={e => handleButton(e)}>Add Photo</button>}
+                      {selected.user ? (
+                        <>
+                          <h2>{selected.title}</h2>
+                          <img src={selected.image_url} alt="mural_thumbnail" width="100" height="100" />
+                          <p> 📷 <strong>{selected.user.username}</strong></p>
+                          <p> on {selected.date_uploaded}</p>
+                          <button onClick={() => handleCheckIn(selected.id)}>Check In</button>
+                        </>
+                      )
+                        : <button onClick={e => handleButton(e)}>Add Photo</button>}
                       {/* <p>Contributed: {formatRelative(selected.date_uploaded, new Date())}</p> */}
                       {/* {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
                         <label for="mural-description">Description:</label>
@@ -239,7 +256,7 @@ function App() {
                   : null}
 
               </GoogleMap>
-              <NewPlaceForm setPlaces={setPlaces} places={places} user={user} />
+              <NewPlaceForm setMarker={setMarker} marker={marker} user={user} />
             </div>
           </Route>
           <Route path="*"><h1 className="page-not-found">404 Page Not Found :(</h1></Route>

@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { Button, Error, Input, FormField, Label, Logo } from "../styles";
 
-export default function NewPlaceForm(setPlaces, places, user) {
+export default function NewPlaceForm(setPlaces, places, setMarker, marker, user) {
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const [errors, setErrors] = useState("");
   const [title, setTitle] = useState("");
   const [imageUrl, setImageUrl] = useState("");
 
+  console.log("marker: " , marker)
   function handleSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
@@ -18,14 +19,18 @@ export default function NewPlaceForm(setPlaces, places, user) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title,
+        lat: marker.lat,
+        lng: marker.lng,
+        title: title,
         image_url: imageUrl,
+        user_id: user.id
         // user_id: user.id
       }),
     }).then((r) => {
       setIsLoading(false);
       if (r.ok) {
-          console.log(r)
+        setPlaces(places) 
+        // setMarker([])
           history.push("/contributions");
       } else {
         r.json().then((err) => setErrors(err.errors));
