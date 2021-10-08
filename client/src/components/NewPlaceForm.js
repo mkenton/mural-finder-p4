@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { Button, Error, Input, FormField, Label, Logo } from "../styles";
 
-export default function NewPlaceForm(setPlaces, places, handleSetMarker, setMarker, marker, user) {
+export default function NewPlaceForm({setPlaces, places, setMarker, marker, user}) {
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const [errors, setErrors] = useState("");
@@ -21,17 +21,21 @@ export default function NewPlaceForm(setPlaces, places, handleSetMarker, setMark
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        // lat: marker.lat,
-        // lng: marker.lng,
+        lat: marker.lat,
+        lng: marker.lng,
+        // ERROR Cannot read properties of undefined (reading 'lat'). marker is undefined.
         title: title,
         image_url: imageUrl,
         description: description,
-        // user_id: user.id
+        user_id: user.id
+        //user_id fails as well
       }),
     }).then((r) => {
       setIsLoading(false);
       if (r.ok) {
-        // setPlaces(places)
+        //setPlaces([...places, r])
+        //setPlaces fails as "not a function"
+        console.log(places)
         // setMarker([])
         // history.push("/contributions");
       } else {

@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   
   resources :places, only: [:index, :create, :update]
-  patch "/places/:id/like", to: "places#increment_check_ins"
+  patch "/places/:id/check_in", to: "places#increment_check_ins"
   
   post "/signup", to: "users#create"
   get "/me", to: "users#show"

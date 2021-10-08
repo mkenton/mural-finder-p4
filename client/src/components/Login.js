@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import '../App.css';
 import styled from "styled-components";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
+import mapStyles from "../mapStyles";
 import { Button, Logo } from "../styles";
 import {
   GoogleMap,
@@ -12,9 +13,28 @@ import {
 } from "@react-google-maps/api";
 // import { formatRelative } from "date-fns";
 
-function Login({ onLogin, places, selected, setSelected, center, options, onMapLoad }) {
+function Login({ places, 
+  setSelected, 
+  selected, 
+  onLogin, 
+  // onMapLoad
+ }) {
   const [showLogin, setShowLogin] = useState(true);
 
+  const mapContainerStyle = {
+    width: "70vw",
+    height: "90vh",
+};
+const center = {
+    lat: 41.89,
+    lng: -87.64
+}
+const options = {
+    styles: mapStyles,
+    disableDefaultUI: true,
+    zoomControl: true
+}
+ 
   return (
     <div className="grid-container">
       <div className="grid-item">
@@ -26,7 +46,7 @@ function Login({ onLogin, places, selected, setSelected, center, options, onMapL
           zoom={10}
           center={center}
           options={options}
-          onLoad={onMapLoad}
+          // onLoad={onMapLoad}
         >
           {places.map((place) => (
             <Marker
