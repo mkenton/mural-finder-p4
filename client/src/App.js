@@ -86,13 +86,12 @@ function App() {
 
   const onMapClick = useCallback((e) => {
     count = count + 1 // setting mural name via counter for testing. TODO: allow input to set name, add picture, etc.
-    setMarkers((current) => [
+    setPlaces((current) => [
       ...current,
       {
-        title: `Mural ${count}`,
         lat: e.latLng.lat(),
         lng: e.latLng.lng(),
-        time: new Date()
+        date_uploaded: new Date().toLocaleDateString()
       },
     ]);
   }, [])
@@ -138,7 +137,7 @@ function App() {
   if (!user)
     return <Login
       onLogin={setUser}
-      markers={markers}
+      places={places}
       selected={selected}
       setSelected={setSelected}
       center={center}
@@ -209,7 +208,8 @@ function App() {
                     onCloseClick={() => setSelected(null)}>
                     <div>
                       <h2>{selected.title}</h2>
-                      <p>Contributed: {formatRelative(selected.time, new Date())}</p>
+                      <p>Contributed: {selected.date_uploaded}</p>
+                      {/* <p>Contributed: {formatRelative(selected.date_uploaded, new Date())}</p> */}
                       {/* {selected.description ? <p>Description: {selected.description}</p> : <form id="popoutForm" onSubmit={handleSubmit}>
                         <label for="mural-description">Description:</label>
                         <input onChange={handleNameEntry} type="text" id="mural-description" name="mural-description"></input>
