@@ -148,7 +148,7 @@ function App() {
           </Route>
           <Route path="/bucketlist">
             {/* <BucketList/> */}
-            <p>Bucket List</p>
+            <h1>Keep track of the spots you want to visit!</h1>
           </Route>
           {/* <Route path="/loginpage">
               <Login onLogin={setOnLogin}/>

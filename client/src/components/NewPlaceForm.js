@@ -9,6 +9,7 @@ export default function NewPlaceForm({setPlaces, places, setMarker, marker, user
   const [title, setTitle] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [description, setDescription] = useState("");
+  const [artistName, setArtistName] = useState("");
 
 
   function handleSubmit(e) {
@@ -27,8 +28,9 @@ export default function NewPlaceForm({setPlaces, places, setMarker, marker, user
         title: title,
         image_url: imageUrl,
         description: description,
+        artist_name: artistName,
         user_id: user.id,
-        date_uploaded: marker.date_uploaded
+        date_uploaded: marker.date_uploaded,
       }),
     }).then((r) => {
       setIsLoading(false);
@@ -76,6 +78,15 @@ export default function NewPlaceForm({setPlaces, places, setMarker, marker, user
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+          />
+        </FormField>
+        <FormField>
+          <Label htmlFor="artistName">Enter Artist Name</Label>
+          <Input
+            type="text"
+            id="artistName"
+            value={artistName}
+            onChange={(e) => setArtistName(e.target.value)}
           />
         </FormField>
         <Button type="submit">Submit</Button>

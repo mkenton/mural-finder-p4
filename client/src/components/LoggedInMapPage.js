@@ -125,7 +125,8 @@ export default function LoggedInMapPage({ setSelected,
 
                             <h2>{selected.title}</h2>
                             <img src={selected.image_url} alt="mural_thumbnail" width="270" height="auto" />
-                            <p> 📷 <strong>{selected.user.username}</strong></p>
+                            <p> Artist: 🎨<strong>{selected.artist_name}</strong></p>
+                            <p> Photo by: 📷  <strong>{selected.user.username}</strong></p>
                             <p> Submitted: <strong>{selected.date_uploaded}</strong></p>
                             <p>Total checkins: <strong>{selected.check_ins > 0 ? selected.check_ins : 0}</strong></p>
                             <Button onClick={() => handleCheckIn(selected.id)}>Check In</Button>
