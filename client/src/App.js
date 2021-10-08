@@ -82,22 +82,21 @@ function App() {
   // console.log("places", places)
   // console.log("first", first)
 
-  let count = 0
+ 
 
   function handleButton(e){
     console.log(e)
   }
   // TO DO - potentially change to handleButton
-  const onMapClick = useCallback((e) => {
-    count = count + 1 // setting mural name via counter for testing. TODO: allow input to set name, add picture, etc.
-    setMarker((current) => [
-      ...current,
+  const handleSetMarker = useCallback((e) => {
+    console.log(e);
+    setMarker(
       {
         lat: e.latLng.lat(),
         lng: e.latLng.lng(),
         date_uploaded: new Date().toLocaleDateString()
       },
-    ]);
+    );
   }, [])
 
   const { isLoaded, loadError } = useLoadScript({
@@ -176,7 +175,7 @@ function App() {
                 zoom={10}
                 center={center}
                 options={options}
-                onClick={onMapClick}
+                onClick={handleSetMarker}
                 places={places}
                 onLoad={onMapLoad}
                 selected={selected}
@@ -193,13 +192,23 @@ function App() {
                     }}
                   />
                 ))} */}
-
+                {marker ? (
+                <Marker
+                // scale={1}
+                position={{ lat: parseFloat(marker.lat), lng: parseFloat(marker.lng) }}
+                draggable={true}
+                onDragEnd={handleSetMarker}/>
+                  ) : ("")}
+                  
                 {places.map((place) => (
                   <Marker
+                    // style={{fillColor: "#0073E6"}}
+                    options={{scaledSize: 1.5}}
+                    icon={'http://maps.google.com/mapfiles/kml/paddle/blu-blank.png'}
                     selected={selected}
                     key={place.id}
                     position={{ lat: parseFloat(place.lat), lng: parseFloat(place.lng) }}
-                    draggable={true}
+                    draggable={false}
                     animation={2}
                     onClick={(e) => {
                       // console.log(e)
